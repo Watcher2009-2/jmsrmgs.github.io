@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>佳木斯人民公社官网</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei", Arial, sans-serif;
+      background: #f5f7fb;
+      color: #333;
+    }
+    header {
+      background: #0f4c81;
+      color: #fff;
+      padding: 24px 20px;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+    header p {
+      margin: 8px 0 0;
+      color: #d6e9ff;
+      font-size: 1rem;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px 40px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 8px 22px rgba(15, 76, 129, 0.08);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    .card h2 {
+      margin-top: 0;
+      color: #0f4c81;
+    }
+    .announcement-item {
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed #e8edf5;
+    }
+    .announcement-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .announcement-item h3 {
+      margin: 0 0 6px;
+      font-size: 1rem;
+    }
+    .announcement-item p {
+      margin: 0;
+      color: #666;
+      line-height: 1.6;
+    }
+    .announcement-edit-btn {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 6px 12px;
+      background: #0f4c81;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    .announcement-edit-btn:hover {
+      background: #09355c;
+    }
+    .section-row {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 20px;
+    }
+    .section-row > .card {
+      min-height: 320px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    input[type="text"], input[type="password"], textarea, select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      box-sizing: border-box;
+      margin-bottom: 16px;
+      background: #f9fbff;
+    }
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+    button {
+      padding: 12px 18px;
+      border: none;
+      border-radius: 8px;
+      background: #0f4c81;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    button:hover {
+      background: #09355c;
+    }
+    .login-panel {
+      max-width: 380px;
+      margin: 0 auto;
+    }
+    .status {
+      color: #c00;
+      margin-bottom: 16px;
+      min-height: 24px;
+    }
+    .hidden {
+      display: none;
+    }
+    .post-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .post-item {
+      padding: 14px 16px;
+      border: 1px solid #e3ebf5;
+      border-radius: 10px;
+      margin-bottom: 14px;
+      background: #fcfeff;
+    }
+    .post-item h3 {
+      margin: 0 0 6px;
+      font-size: 1rem;
+    }
+    .post-meta {
+      color: #777;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+    }
+    .clickable-link {
+      color: #0f4c81;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .comment-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 10px 0;
+    }
+    .comment-item {
+      padding: 12px 14px;
+      border: 1px solid #e8edf5;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      background: #f8fbff;
+    }
+    .comment-item p {
+      margin: 8px 0 0;
+      color: #444;
+      line-height: 1.5;
+    }
+    .footer {
+      text-align: center;
+      color: #7a8496;
+      font-size: 0.95rem;
+      margin-top: 20px;
+    }
+    @media (max-width: 900px) {
+      .section-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>佳木斯人民公社</h1>
+    <p>民主 自由 平等</p>
+  </header>
+  <div class="container">
+    <div class="card">
+      <h2>最新公告</h2>
+      <div id="announcement-list" class="grid-3"></div>
+      <div id="announcement-edit-panel" class="hidden" style="margin-top:20px; border-top:1px solid #e8edf5; padding-top:20px;">
+        <h3 style="margin-top:0;">编辑公告</h3>
+        <label for="announcement-title">公告标题</label>
+        <input id="announcement-title" type="text" placeholder="请输入公告标题" />
+        <label for="announcement-content">公告内容</label>
+        <textarea id="announcement-content" placeholder="请输入公告内容"></textarea>
+        <button type="button" onclick="saveAnnouncementEdit()">保存公告</button>
+        <button type="button" onclick="cancelAnnouncementEdit()" style="margin-left:10px; background:#777;">取消</button>
+        <div id="announcement-status" class="status"></div>
+      </div>
+    </div>
+    <div class="section-row">
+      <div class="card">
+        <h2>查询栏目</h2>
+        <p>请输入关键词查询社团活动、公告、成员和帖子内容。</p>
+        <label for="search-keyword">查询关键词</label>
+        <input id="search-keyword" type="text" placeholder="例如：活动、报名、培训" />
+        <button type="button" onclick="handleSearch()">开始查询</button>
+        <div id="search-results" class="status"></div>
+      </div>
+      <div class="card">
+        <h2>发帖栏目</h2>
+        <p>登录后可以发布新帖子，与社员交流活动意见与建议。</p>
+        <div id="post-form" class="hidden">
+          <label for="post-title">帖子标题</label>
+          <input id="post-title" type="text" placeholder="请输入帖子标题" />
+          <label for="post-content">帖子内容</label>
+          <textarea id="post-content" placeholder="请输入帖子内容"></textarea>
+          <button type="button" onclick="handlePost()">发布帖子</button>
+          <div id="post-status" class="status"></div>
+        </div>
+        <div id="post-login-hint">
+          <p>请先登录账号后发布帖子。</p>
+        </div>
+      </div>
+    </div>
+    <div class="card login-panel">
+      <h2>账号密码登录</h2>
+      <div id="login-status" class="status"></div>
+      <label for="username">用户名</label>
+      <input id="username" type="text" placeholder="请输入用户名" />
+      <label for="password">密码</label>
+      <input id="password" type="password" placeholder="请输入密码" />
+      <button type="button" onclick="handleLogin()">登录</button>
+      <button type="button" onclick="handleLogout()" style="margin-left: 10px; background: #777;">登出</button>
+    </div>
+    <div class="card">
+      <h2>社区交流</h2>
+      <ul id="post-list" class="post-list"></ul>
+    </div>
+    <div id="post-detail-card" class="card hidden">
+      <h2>帖子详情</h2>
+      <div id="detail-title" style="font-size:1.1rem; font-weight:700; margin-bottom:10px;"></div>
+      <div id="detail-meta" class="post-meta"></div>
+      <p id="detail-content" style="margin: 16px 0;"></p>
+      <h3 style="margin-top: 0;">评论</h3>
+      <ul id="comment-list" class="comment-list"></ul>
+      <div id="comment-form" class="hidden">
+        <label for="comment-text">发表评论</label>
+        <textarea id="comment-text" placeholder="请输入评论内容"></textarea>
+        <button type="button" onclick="handleComment()">添加评论</button>
+        <div id="comment-status" class="status"></div>
+      </div>
+      <div id="comment-login-hint">
+        <p>请登录后发表评论。</p>
+      </div>
+      <button type="button" onclick="closePostDetail()" style="background: #777; margin-top: 10px;">关闭详情</button>
+    </div>
+    <div class="footer">
+      佳木斯人民公社版权所有 &bull; 组织官网演示版本
+    </div>
+  </div>
+  <script>
+    const announcements = [
+      { id: 1, title: '社团集体活动公告', content: '本周六上午9点将在社团活动中心开展读书会与交流分享会，欢迎全体成员参加。' },
+      { id: 2, title: '志愿服务报名', content: '本月组织社区志愿清洁行动，报名截止4月20日，敬请积极参与，共建美好环境。' },
+      { id: 3, title: '社员培训安排', content: '即将启动公共事务与团建技能培训课程，第一课将由组织委员主讲。' }
+    ];
+    const posts = [
+      {
+        id: 1,
+        title: '欢迎加入佳木斯人民公社',
+        content: '这里是我们的社团交流平台，大家可以发布活动报名、心得经验和服务建议。',
+        author: '社团管理',
+        role: '管理员',
+        time: '2026-04-11 10:00',
+        comments: []
+      },
+      {
+        id: 2,
+        title: '下周团建活动通知',
+        content: '下周将组织一次红色教育参观活动，具体时间与集合地点请随时关注公告。',
+        author: '组织委员',
+        role: '管理员',
+        time: '2026-04-09 14:20',
+        comments: []
+      }
+    ];
+
+    const users = [
+      { username: 'watcher', password: '789jwy221', role: '管理员' },
+      { username: 'shaoshuai', password: 'jms002', role: '成员' }
+    ];
+    let currentUser = null;
+    let currentPostId = null;
+    let currentAnnouncementId = null;
+
+    function renderAnnouncements() {
+      const container = document.getElementById('announcement-list');
+      container.innerHTML = announcements.map(announcement => {
+        const editButton = currentUser && currentUser.role === '管理员'
+          ? `<button class="announcement-edit-btn" onclick="showAnnouncementEdit(${announcement.id})">编辑</button>`
+          : '';
+        return `
+          <div class="announcement-item">
+            <h3>${escapeHtml(announcement.title)}</h3>
+            <p>${escapeHtml(announcement.content)}</p>
+            ${editButton}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function showAnnouncementEdit(id) {
+      const announcement = announcements.find(a => a.id === id);
+      if (!announcement) return;
+      currentAnnouncementId = id;
+      document.getElementById('announcement-title').value = announcement.title;
+      document.getElementById('announcement-content').value = announcement.content;
+      document.getElementById('announcement-status').textContent = '';
+      document.getElementById('announcement-edit-panel').classList.remove('hidden');
+      window.scrollTo({ top: document.getElementById('announcement-edit-panel').offsetTop - 20, behavior: 'smooth' });
+    }
+
+    function saveAnnouncementEdit() {
+      if (!currentUser || currentUser.role !== '管理员') return;
+      const title = document.getElementById('announcement-title').value.trim();
+      const content = document.getElementById('announcement-content').value.trim();
+      const status = document.getElementById('announcement-status');
+      if (!title || !content) {
+        status.textContent = '公告标题和内容不能为空。';
+        status.style.color = '#c00';
+        return;
+      }
+      const announcement = announcements.find(a => a.id === currentAnnouncementId);
+      if (!announcement) return;
+      announcement.title = title;
+      announcement.content = content;
+      renderAnnouncements();
+      status.textContent = '公告已更新。';
+      status.style.color = '#1d7a1d';
+    }
+
+    function cancelAnnouncementEdit() {
+      currentAnnouncementId = null;
+      document.getElementById('announcement-edit-panel').classList.add('hidden');
+      document.getElementById('announcement-status').textContent = '';
+    }
+
+    function renderPosts() {
+      const list = document.getElementById('post-list');
+      list.innerHTML = '';
+      posts.slice().reverse().forEach(post => {
+        const li = document.createElement('li');
+        li.className = 'post-item';
+        li.innerHTML = `
+          <h3><span class="clickable-link" onclick="showPostDetail(${post.id})">${escapeHtml(post.title)}</span></h3>
+          <div class="post-meta">发布人：${escapeHtml(post.author)} <span style="color:#0f4c81;">[${escapeHtml(post.role)}]</span> | 时间：${escapeHtml(post.time)}</div>
+          <p>${escapeHtml(post.content)}</p>
+        `;
+        list.appendChild(li);
+      });
+    }
+
+    function escapeHtml(text) {
+      return text.replace(/[&<>"']/g, function (m) {
+        return {
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;'
+        }[m];
+      });
+    }
+
+    function setLoginState(loggedIn) {
+      const postForm = document.getElementById('post-form');
+      const postHint = document.getElementById('post-login-hint');
+      const status = document.getElementById('login-status');
+      if (loggedIn) {
+        postForm.classList.remove('hidden');
+        postHint.classList.add('hidden');
+        status.textContent = `已登录：${currentUser.username}（${currentUser.role}）`;
+        status.style.color = '#1d7a1d';
+      } else {
+        postForm.classList.add('hidden');
+        postHint.classList.remove('hidden');
+        status.textContent = '未登录，请输入账号密码登录。';
+        status.style.color = '#c00';
+      }
+      renderAnnouncements();
+      updateCommentForm();
+    }
+
+    function updateCommentForm() {
+      const form = document.getElementById('comment-form');
+      const hint = document.getElementById('comment-login-hint');
+      if (!currentPostId) {
+        return;
+      }
+      if (currentUser) {
+        form.classList.remove('hidden');
+        hint.classList.add('hidden');
+      } else {
+        form.classList.add('hidden');
+        hint.classList.remove('hidden');
+      }
+    }
+
+    function handleLogin() {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const status = document.getElementById('login-status');
+
+      if (!username || !password) {
+        status.textContent = '用户名和密码不能为空。';
+        status.style.color = '#c00';
+        return;
+      }
+      const user = users.find(u => u.username === username && u.password === password);
+      if (user) {
+        currentUser = { username: user.username, role: user.role };
+        localStorage.setItem('jmspublic_user', JSON.stringify(currentUser));
+        setLoginState(true);
+      } else {
+        status.textContent = '账号或密码错误，请重试。';
+        status.style.color = '#c00';
+      }
+    }
+
+    function handleLogout() {
+      currentUser = null;
+      localStorage.removeItem('jmspublic_user');
+      setLoginState(false);
+    }
+
+    function handleSearch() {
+      const keyword = document.getElementById('search-keyword').value.trim().toLowerCase();
+      const result = document.getElementById('search-results');
+      if (!keyword) {
+        result.textContent = '请输入查询关键词。';
+        result.style.color = '#c00';
+        return;
+      }
+      const matched = posts.filter(post =>
+        post.title.toLowerCase().includes(keyword) || post.content.toLowerCase().includes(keyword)
+      );
+      if (matched.length === 0) {
+        result.textContent = `未找到与 "${keyword}" 相关的帖子。`;
+        result.style.color = '#555';
+      } else {
+        result.style.color = '#1d7a1d';
+        result.innerHTML = `找到 ${matched.length} 条相关帖子：<br>${matched.map(item => `<span class="clickable-link" onclick="showPostDetail(${item.id})">${escapeHtml(item.title)}</span> - ${escapeHtml(item.author)}`).join('<br>')}`;
+      }
+    }
+
+    function handlePost() {
+      const title = document.getElementById('post-title').value.trim();
+      const content = document.getElementById('post-content').value.trim();
+      const status = document.getElementById('post-status');
+      if (!currentUser) {
+        status.textContent = '请先登录再发布帖子。';
+        status.style.color = '#c00';
+        return;
+      }
+      if (!title || !content) {
+        status.textContent = '帖子标题和内容不能为空。';
+        status.style.color = '#c00';
+        return;
+      }
+      const now = new Date();
+      const time = now.toLocaleString('zh-CN', { hour12: false });
+      const nextId = posts.length ? Math.max(...posts.map(p => p.id)) + 1 : 1;
+      posts.push({ id: nextId, title, content, author: currentUser.username, role: currentUser.role, time, comments: [] });
+      renderPosts();
+      document.getElementById('post-title').value = '';
+      document.getElementById('post-content').value = '';
+      status.textContent = '帖子发布成功！';
+      status.style.color = '#1d7a1d';
+    }
+
+    function showPostDetail(postId) {
+      const post = posts.find(item => item.id === postId);
+      if (!post) return;
+      currentPostId = postId;
+      document.getElementById('detail-title').textContent = post.title;
+      document.getElementById('detail-meta').textContent = `发布人：${post.author} [${post.role}] | 时间：${post.time}`;
+      document.getElementById('detail-content').textContent = post.content;
+      renderComments(post);
+      document.getElementById('post-detail-card').classList.remove('hidden');
+      updateCommentForm();
+      document.getElementById('comment-status').textContent = '';
+      window.scrollTo({ top: document.getElementById('post-detail-card').offsetTop - 20, behavior: 'smooth' });
+    }
+
+    function renderComments(post) {
+      const list = document.getElementById('comment-list');
+      list.innerHTML = '';
+      if (!post.comments || post.comments.length === 0) {
+        list.innerHTML = '<li class="comment-item">暂无评论，快来发表第一条评论。</li>';
+        return;
+      }
+      post.comments.forEach(comment => {
+        const li = document.createElement('li');
+        li.className = 'comment-item';
+        li.innerHTML = `
+          <div class="post-meta">${escapeHtml(comment.author)} [${escapeHtml(comment.role)}] | ${escapeHtml(comment.time)}</div>
+          <p>${escapeHtml(comment.text)}</p>
+        `;
+        list.appendChild(li);
+      });
+    }
+
+    function handleComment() {
+      const text = document.getElementById('comment-text').value.trim();
+      const status = document.getElementById('comment-status');
+      if (!currentUser) {
+        status.textContent = '请先登录后发表评论。';
+        status.style.color = '#c00';
+        return;
+      }
+      if (!currentPostId) {
+        status.textContent = '请选择要评论的帖子。';
+        status.style.color = '#c00';
+        return;
+      }
+      if (!text) {
+        status.textContent = '评论内容不能为空。';
+        status.style.color = '#c00';
+        return;
+      }
+      const post = posts.find(item => item.id === currentPostId);
+      if (!post) return;
+      const now = new Date();
+      const time = now.toLocaleString('zh-CN', { hour12: false });
+      post.comments.push({ author: currentUser.username, role: currentUser.role, text, time });
+      renderComments(post);
+      document.getElementById('comment-text').value = '';
+      status.textContent = '评论已提交。';
+      status.style.color = '#1d7a1d';
+    }
+
+    function closePostDetail() {
+      currentPostId = null;
+      document.getElementById('post-detail-card').classList.add('hidden');
+      updateCommentForm();
+    }
+
+    window.addEventListener('load', () => {
+      const savedUser = localStorage.getItem('jmspublic_user');
+      if (savedUser) {
+        try {
+          currentUser = JSON.parse(savedUser);
+        } catch (e) {
+          currentUser = null;
+        }
+      } else {
+        currentUser = null;
+      }
+      setLoginState(Boolean(currentUser));
+      renderAnnouncements();
+      renderPosts();
+    });
+  </script>
+</body>
+</html>
